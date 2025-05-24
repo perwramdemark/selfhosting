@@ -1,0 +1,28 @@
+services:
+  transmission-openvpn:
+    container_name: transmission-openvpn
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /mnt/data/media/downloads:/downloads
+      - /home/houdini/transmission:/config
+    environment:
+      - OPENVPN_PROVIDER=mullvad
+      - OPENVPN_CONFIG=se_mma
+      - OPENVPN_USERNAME=${OPENVPN_USERNAME}
+      - OPENVPN_PASSWORD=dummy
+      - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_PASSWORD}
+      - TRANSMISSION_RPC_USERNAME=perra
+      - TRANSMISSION_DOWNLOAD_DIR=/downloads/completed
+      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
+      - TRANSMISSION_WATCH_DIR=/downloads/watch
+      - LOCAL_NETWORK=192.168.0.0/16
+      - TZ=Europe/Stockholm
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+    ports:
+      - 9091:9091
+    image: haugene/transmission-openvpn
+networks: {}

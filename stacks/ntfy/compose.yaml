@@ -1,0 +1,29 @@
+services:
+  ntfy:
+    image: binwiederhier/ntfy
+    container_name: ntfy
+    command:
+      - serve
+    environment:
+      - TZ=${TZ}
+      - LANG=sv_SE.UTF-8
+      - LANGUAGE=sv_SE:sv
+      - LC_ALL=sv_SE.UTF-8
+    user: ${PUID}:${PGID}
+    volumes:
+      - /home/houdini/ntfy/cache:/var/cache/ntfy
+      - /home/houdini/ntfy:/etc/ntfy
+    ports:
+      - 8088:80
+    healthcheck:
+      # optional: remember to adapt the host:port to your environment
+      test:
+        - CMD-SHELL
+        - wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo
+          '"healthy"\s*:\s*true' || exit 1
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+networks: {}

@@ -1,0 +1,17 @@
+networks:
+  default:
+    driver: bridge
+services:
+  adguardhome:
+    container_name: adguard
+    image: adguard/adguardhome
+    restart: unless-stopped
+    volumes:
+      - /home/houdini/adguard/work:/opt/adguardhome/work
+      - /home/houdini/adguard/conf:/opt/adguardhome/conf
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 83:80/tcp
+    labels:
+      - diun.enable=true

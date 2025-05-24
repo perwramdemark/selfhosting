@@ -1,0 +1,7 @@
+*.log
+*.bak
+*.swp
+secrets.env
+*.key
+**/cache/
+**/data/

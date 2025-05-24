@@ -1,0 +1,16 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+
+    network_mode: 'host'
+    volumes:
+      - /home/houdini/jellyfin/config:/config
+      - /home/houdini/jellyfin/cache:/cache
+      - /mnt/data/media:/media
+    restart: 'unless-stopped'
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.w8k.site
+    # Optional - may be necessary for docker healthcheck to pass if running in host network mode
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
