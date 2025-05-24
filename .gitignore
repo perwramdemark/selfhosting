@@ -4,4 +4,5 @@
 secrets.env
 *.key
 **/cache/
+.env
 **/data/
