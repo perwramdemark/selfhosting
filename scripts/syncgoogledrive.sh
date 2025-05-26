@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/bin/rclone sync mygoogledrive:/ /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/GoogleDrive --log-file=/home/houdini/rclone/rclone.log --log-level NOTICE
+/usr/bin/rclone sync mygoogledrive:/ /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/GoogleDrive --log-file=/home/houdini/scripts/rclone.log --log-level NOTICE
 
 # Check the exit status of rclone command
 if [ $? -eq 0 ]; then

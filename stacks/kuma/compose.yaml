@@ -1,0 +1,14 @@
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: kuma
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/houdini/kuma:/app/data
+    ports:
+      - 3001:3001
+    restart: unless-stopped
+networks: {}
