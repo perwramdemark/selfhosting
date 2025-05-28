@@ -2,6 +2,11 @@
 
 This repository documents the containers running in my personal homelab. It includes services for media management, networking, security, notifications, and user interface improvements. All services are containerized and orchestrated using Docker.
 
+<p>This is my home screen in mobile view with most of my apps running.</p>
+<p align="center">
+<img src="https://github.com/user-attachments/assets/70499eab-b4f1-49d5-a276-51b291e4b4bd" alt="Mobile Home Screen" width="300">
+</p>
+
 ---
 
 ## 🔧 Infrastructure & Management Tools
@@ -41,12 +46,17 @@ This repository documents the containers running in my personal homelab. It incl
 
 ---
 
-## 🗣️ Communication
+## 🗣️ Monitoring
 
 ### **[Beszel](https://github.com/henrygd/beszel)**
 
 * **Image**: `henrygd/beszel` & `henrygd/beszel-agent`
-* **Purpose**: Secure self-hosted chat app and its accompanying agent service for encrypted messaging.
+* **Purpose**: Monitoring tool for all your servers and docker containers. Great graphs!
+
+### **[Uptime Kume](https://uptime.kuma.pet)**
+
+* **Image**: `louislam/uptime-kuma`
+* **Purpose**: Self-hosted monitoring tool with great abilities for notifications and alerting.
 
 ---
 
