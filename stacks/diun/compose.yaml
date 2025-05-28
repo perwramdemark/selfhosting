@@ -1,8 +1,6 @@
 services:
   diun:
     image: crazymax/diun:latest
-    container_name: diun
-    hostname: diun
     command: serve
     volumes:
       - /home/houdini/diun/data:/data

@@ -1,13 +1,12 @@
 services:
   homarr:
     container_name: homarr
-    image: ghcr.io/ajnart/homarr:latest
+    image: ghcr.io/homarr-labs/homarr:latest
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /home/houdini/homarr/configs:/app/data/configs
-      - /home/houdini/homarr/icons:/app/public/icons
-      - /home/houdini/homarr/data:/data
+      - /home/houdini/homarr:/appdata
+    environment:
+      - SECRET_ENCRYPTION_KEY=617b3e55112091b2eebdd6e03aebef7c0cd45b4bbb7c12763e1368b8e2246998
     ports:
       - 7575:7575
 networks: {}

@@ -16,6 +16,7 @@ services:
     volumes:
       - /home/houdini/beszel/beszel_socket:/beszel_socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/.beszel:/extra-filesystems/md0:ro
     environment:
       LISTEN: /beszel_socket/beszel.sock
       KEY: ${KEY}

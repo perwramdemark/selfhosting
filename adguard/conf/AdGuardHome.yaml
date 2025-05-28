@@ -292,6 +292,10 @@ filtering:
       answer: 192.168.1.10
     - domain: w8k.site
       answer: 192.168.1.10
+    - domain: dumbledore
+      answer: 192.168.1.248
+    - domain: labero
+      answer: 192.168.1.9
   safe_fs_patterns:
     - /opt/adguardhome/work/data/userfilters/*
   safebrowsing_cache_size: 1048576
@@ -437,7 +441,7 @@ clients:
         schedule:
           time_zone: UTC
         ids: []
-      name: Ubuntu
+      name: dumbledore
       ids:
         - 192.168.1.248
       tags: []
