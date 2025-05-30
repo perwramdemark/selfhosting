@@ -4,8 +4,8 @@
 
 # Check the exit status of rclone command
 if [ $? -eq 0 ]; then
-  curl --silent --output /dev/null http://ubuntu:3001/api/push/QEWxc3vt76?status=up&msg=OK&ping= >> /dev/null 2>&1
+  curl --silent --output /dev/null http://houdini:3001/api/push/QEWxc3vt76?status=up&msg=OK&ping= >> /dev/null 2>&1
 else
-  curl --silent --output /dev/null http://ubuntu:3001/api/push/QEWxc3vt76?status=down&msg=Sync%20NOK&ping= >> /dev/null 2>&1
+  curl --silent --output /dev/null http://houdini:3001/api/push/QEWxc3vt76?status=down&msg=Sync%20NOK&ping= >> /dev/null 2>&1
   exit 1
 fi

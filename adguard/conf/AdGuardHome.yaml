@@ -346,6 +346,62 @@ clients:
       ignore_statistics: false
     - safe_search:
         enabled: false
+        bing: false
+        duckduckgo: false
+        ecosia: false
+        google: false
+        pixabay: false
+        yandex: false
+        youtube: false
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Fridas iPhone
+      ids:
+        - 192.168.1.131
+      tags: []
+      upstreams: []
+      uid: 01971812-0762-7ad2-8bd7-6a9806e2a03b
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Hugos iPhone
+      ids:
+        - 192.168.1.184
+      tags: []
+      upstreams: []
+      uid: 01971812-92fa-7c59-ac71-6230cf521454
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
         bing: true
         duckduckgo: true
         ecosia: true
@@ -391,6 +447,34 @@ clients:
       tags: []
       upstreams: []
       uid: 01965810-05a7-798f-8d2c-6927ccfe0b8b
+      upstreams_cache_size: 0
+      upstreams_cache_enabled: false
+      use_global_settings: true
+      filtering_enabled: false
+      parental_enabled: false
+      safebrowsing_enabled: false
+      use_global_blocked_services: true
+      ignore_querylog: false
+      ignore_statistics: false
+    - safe_search:
+        enabled: false
+        bing: true
+        duckduckgo: true
+        ecosia: true
+        google: true
+        pixabay: true
+        yandex: true
+        youtube: true
+      blocked_services:
+        schedule:
+          time_zone: UTC
+        ids: []
+      name: Tesla Model 3 KITT
+      ids:
+        - 192.168.1.46
+      tags: []
+      upstreams: []
+      uid: 01971814-6e47-7a96-9b32-50b620e31efb
       upstreams_cache_size: 0
       upstreams_cache_enabled: false
       use_global_settings: true

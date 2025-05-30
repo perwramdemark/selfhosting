@@ -4,20 +4,20 @@ services:
     cap_add:
       - NET_ADMIN
     volumes:
-      - /mnt/data/media/downloads:/downloads
+      - /mnt/data/media/downloads:/media/downloads
       - /home/houdini/transmission:/config
     environment:
-      - OPENVPN_PROVIDER=mullvad
-      - OPENVPN_CONFIG=se_mma
+      - OPENVPN_PROVIDER=PIA
+      - OPENVPN_CONFIG=sweden
       - OPENVPN_USERNAME=${OPENVPN_USERNAME}
-      - OPENVPN_PASSWORD=dummy
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_PASSWORD}
       - TRANSMISSION_RPC_USERNAME=perra
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads/completed
-      - TRANSMISSION_INCOMPLETE_DIR=/downloads/incomplete
-      - TRANSMISSION_WATCH_DIR=/downloads/watch
+      - TRANSMISSION_DOWNLOAD_DIR=/media/downloads
+      - TRANSMISSION_INCOMPLETE_DIR=/media/downloads/incomplete
+      - TRANSMISSION_WATCH_DIR=/media/downloads
       - LOCAL_NETWORK=192.168.0.0/16
-      - TZ=Europe/Stockholm
+      - TZ=${TZ}
     logging:
       driver: json-file
       options:
