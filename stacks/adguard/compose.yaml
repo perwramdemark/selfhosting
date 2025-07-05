@@ -3,7 +3,7 @@ networks:
     driver: bridge
 services:
   adguardhome:
-    container_name: adguard
+    container_name: adguard_houdini
     image: adguard/adguardhome
     restart: unless-stopped
     volumes:

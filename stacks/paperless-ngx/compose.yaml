@@ -1,0 +1,24 @@
+services:
+  broker:
+    image: docker.io/library/redis:8
+    restart: unless-stopped
+    volumes:
+      - redisdata:/data
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    restart: unless-stopped
+    depends_on:
+      - broker
+    ports:
+      - 8000:8000
+    volumes:
+      - /home/houdini/paperless/data:/usr/src/paperless/data
+      - /home/houdini/paperless/media:/usr/src/paperless/media
+      - /home/houdini/paperless/export:/usr/src/paperless/export
+      - /home/houdini/paperless/consume:/usr/src/paperless/consume
+    env_file: .env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+volumes:
+  redisdata: null
+networks: {}

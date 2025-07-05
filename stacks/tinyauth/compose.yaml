@@ -1,0 +1,19 @@
+services:
+  tinyauth:
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    container_name: tinyauth
+    restart: unless-stopped
+    ports:
+      - 3003:3000
+    environment:
+      - SECRET=${SECRET}
+      - APP_URL=https://tinyauth.w8k.site
+      - GENERIC_CLIENT_ID=bc74ab19-3941-45b3-b370-d1ae40dec47f
+      - GENERIC_CLIENT_SECRET=${CLIENT_SECRET}
+      - GENERIC_AUTH_URL=https://pocket-id.w8k.site/authorize
+      - GENERIC_TOKEN_URL=https://pocket-id.w8k.site/api/oidc/token
+      - GENERIC_USER_URL=https://pocket-id.w8k.site/api/oidc/userinfo
+      - GENERIC_SCOPES=openid email profile groups
+      - GENERIC_NAME=Pocket ID
+      - OAUTH_AUTO_REDIRECT=generic
+networks: {}

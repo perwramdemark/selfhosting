@@ -6,7 +6,7 @@ services:
     volumes:
       - /home/houdini/homarr:/appdata
     environment:
-      - SECRET_ENCRYPTION_KEY=617b3e55112091b2eebdd6e03aebef7c0cd45b4bbb7c12763e1368b8e2246998
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     ports:
       - 7575:7575
 networks: {}

@@ -13,6 +13,7 @@ SOURCE_DIRS=(
   "/home/houdini/sonarr/Backups"
   "/home/houdini/prowlarr/Backups"
   "/home/houdini/readarr/Backups"
+  "/home/houdini/paperless/export"
 )
 
 # Base destination directory
@@ -43,10 +44,10 @@ for SRC in "${SOURCE_DIRS[@]}"; do
     fi
 
     shopt -s globstar nullglob
-    ZIP_FILES=("$SRC"/**/*.zip)
+    ALL_FILES=("$SRC"/**/*.*)
 
-    if [ ${#ZIP_FILES[@]} -gt 0 ]; then
-      cp -u "${ZIP_FILES[@]}" "$APP_DEST"
+    if [ ${#ALL_FILES[@]} -gt 0 ]; then
+      cp -u "${ALL_FILES[@]}" "$APP_DEST"
 
       if [ $? -ne 0 ]; then
         ERRORS+=("Failed to copy files from $SRC")
@@ -55,7 +56,7 @@ for SRC in "${SOURCE_DIRS[@]}"; do
         echo "$(date): Copied files from $SRC to $APP_DEST" >> $HOME_DIR/backup_copy.log
       fi
     else
-      echo "$(date): No .zip files found in $SRC" >> $HOME_DIR/backup_copy.log
+      echo "$(date): No files found in $SRC" >> $HOME_DIR/backup_copy.log
     fi
 
   else
