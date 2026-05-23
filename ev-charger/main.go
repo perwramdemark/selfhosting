@@ -156,14 +156,16 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							xs += step
 						}
 						pointsStr = strings.Join(pts, " ")
+						// Nordpool publicerar prisdata var 15:e minut (4 punkter per timme)
+						const pointsPerHour = 4
 						// Beräkna highlight-fönster: 5 timmar från data.State
 						if stateTime, err4 := time.Parse(time.RFC3339, data.State); err4 == nil {
 							stateLocal := stateTime.Local()
 							now := time.Now()
 							todayMidnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
-							startIdx := int(stateLocal.Sub(todayMidnight).Hours())
+							startIdx := int(stateLocal.Sub(todayMidnight).Hours() * float64(pointsPerHour))
 							if startIdx >= 0 && startIdx < len(pts) {
-								endIdx := startIdx + 5
+								endIdx := startIdx + 5*pointsPerHour
 								if endIdx > len(pts)-1 {
 									endIdx = len(pts) - 1
 								}
@@ -176,10 +178,10 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 						// Markera nuvarande tid (lokal/Stockholm) som en punkt
 						nowTime := time.Now()
 						todayMid := time.Date(nowTime.Year(), nowTime.Month(), nowTime.Day(), 0, 0, 0, 0, nowTime.Location())
-						hoursFloat := nowTime.Sub(todayMid).Hours()
-						if hoursFloat >= 0 && hoursFloat <= float64(len(combined)-1) {
-							floorIdx := int(hoursFloat)
-							frac := hoursFloat - float64(floorIdx)
+						idxFloat := nowTime.Sub(todayMid).Hours() * float64(pointsPerHour)
+						if idxFloat >= 0 && idxFloat <= float64(len(combined)-1) {
+							floorIdx := int(idxFloat)
+							frac := idxFloat - float64(floorIdx)
 							ceilIdx := floorIdx + 1
 							if ceilIdx >= len(combined) {
 								ceilIdx = floorIdx
@@ -191,7 +193,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							} else {
 								scaledNow = ((interpolated - min) / (max - min)) * 50.0
 							}
-							nowX := hoursFloat * step
+							nowX := idxFloat * step
 							nowY := 50.0 - scaledNow
 							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-highlight)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY)
 						}
