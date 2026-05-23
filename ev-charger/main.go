@@ -196,7 +196,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							nowX := idxFloat * step
 							nowY := 50.0 - scaledNow
 							// Använd en mini-länge så att stroke-linecap="round" garanterat ritas (vissa webbläsare cullar nollängdslinjer)
-							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-negative)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY+0.1)
+							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-positive)" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY+0.1)
 						}
 					}
 					// ersätt den hårdkodade polyline-points med vår genererade om vi lyckades
@@ -210,7 +210,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 			  <div class="text-truncate">%s</div>
 		  </div>
 		  <a class="market-chart grow" style="height: 2.5rem">
-			  <svg class="market-chart" viewBox="0 0 100 50" width="100%%" height="100%%" preserveAspectRatio="none">
+			  <svg class="market-chart" viewBox="0 0 100 50" width="100%%" height="100%%" preserveAspectRatio="none" overflow="visible">
 				  <polyline fill="none" stroke="var(--color-text-subdue)" stroke-linejoin="round" stroke-width="1.0px" points="%s" vector-effect="non-scaling-stroke"></polyline>
 				  %s
 				  %s
