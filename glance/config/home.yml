@@ -45,7 +45,7 @@
         - type: extension
           allow-potentially-dangerous-html: true
           url: http://192.168.1.10:8042/ev-start-time-snippet
-          cache: 1s
+          cache: 5m
 
         - $include: widgets/hockey.yml
 
