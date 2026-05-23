@@ -22,6 +22,7 @@ secrets.env
 .docker
 .wget-hsts
 adguard/conf/AdGuardHome.yaml
+immich/postgres/
 bazarr/
 beszel/
 calibre-web/
