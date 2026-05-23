@@ -119,6 +119,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 					}
 					// Om vi har data, skala om till 0-50 och bygg points-strängen
 					pointsStr := ""
+					highlightStr := ""
 					if len(combined) > 0 {
 						// hitta min och max
 						min := combined[0]
@@ -154,6 +155,23 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							xs += step
 						}
 						pointsStr = strings.Join(pts, " ")
+						// Beräkna highlight-fönster: 5 timmar från data.State
+						if stateTime, err4 := time.Parse(time.RFC3339, data.State); err4 == nil {
+							stateLocal := stateTime.Local()
+							now := time.Now()
+							todayMidnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
+							startIdx := int(stateLocal.Sub(todayMidnight).Hours())
+							if startIdx >= 0 && startIdx < len(pts) {
+								endIdx := startIdx + 5
+								if endIdx > len(pts)-1 {
+									endIdx = len(pts) - 1
+								}
+								if endIdx > startIdx {
+									highlightPts := strings.Join(pts[startIdx:endIdx+1], " ")
+									highlightStr = fmt.Sprintf(`<polyline fill="none" stroke="var(--color-primary)" stroke-linejoin="round" stroke-width="1.5px" points="%s" vector-effect="non-scaling-stroke"></polyline>`, highlightPts)
+								}
+							}
+						}
 					}
 					// ersätt den hårdkodade polyline-points med vår genererade om vi lyckades
 					if pointsStr != "" {
@@ -168,6 +186,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 		  <a class="market-chart grow" style="height: 2.5rem">
 			  <svg class="market-chart" viewBox="0 0 100 50" width="100%%" height="100%%" preserveAspectRatio="none">
 				  <polyline fill="none" stroke="var(--color-text-subdue)" stroke-linejoin="round" stroke-width="1.0px" points="%s" vector-effect="non-scaling-stroke"></polyline>
+				  %s
 			  </svg>
 		  </a>
 		  <div class="market-values shrink-0">
@@ -176,7 +195,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 		  </div>
 	  </div>
   </div>
-	`, timeInfo.Day, timeInfo.Day, timeInfo.Time, pointsStr, fmt.Sprintf("%.2f kr", data.Attributes.AveragePrice))
+	`, timeInfo.Day, timeInfo.Day, timeInfo.Time, pointsStr, highlightStr, fmt.Sprintf("%.2f kr", data.Attributes.AveragePrice))
 						w.Write([]byte(htmlContent))
 						return
 					}
