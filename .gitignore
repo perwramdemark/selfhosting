@@ -1,6 +1,7 @@
 *.log
 *.bak
 *.swp
+.idea/
 secrets.env
 *.key
 **/cache/
