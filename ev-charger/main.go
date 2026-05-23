@@ -217,7 +217,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 			  </svg>
 		  </a>
 		  <div class="market-values shrink-0">
-			  <div class="size-h3 text-right color-positive">%s</div>
+			  <div class="size-h3 text-right color-primary">%s</div>
 			  <div class="text-right">Avg. Price</div>
 		  </div>
 	  </div>
