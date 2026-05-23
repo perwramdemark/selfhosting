@@ -165,8 +165,8 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 			  <a class="color-highlight size-h4 block text-truncate" title="%s">%s</a>
 			  <div class="text-truncate">%s</div>
 		  </div>
-		  <a class="market-chart" style="width: 8.5rem">
-			  <svg class="market-chart shrink-0" viewBox="0 0 100 50">
+		  <a class="market-chart grow" style="height: 2.5rem">
+			  <svg class="market-chart" viewBox="0 0 100 50" width="100%%" height="100%%" preserveAspectRatio="none">
 				  <polyline fill="none" stroke="var(--color-text-subdue)" stroke-linejoin="round" stroke-width="1.0px" points="%s" vector-effect="non-scaling-stroke"></polyline>
 			  </svg>
 		  </a>
