@@ -2,15 +2,18 @@ services:
   calibre-web:
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - DOCKER_MODS=linuxserver/mods:universal-calibre
+    extends:
+      file: ../common-security-lsio.yml
+      service: hardened-blueprint
     volumes:
       - /home/houdini/calibre-web:/config
-      - /mnt/data/media/books:/books
+      - /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/ebooks:/books:ro
     ports:
       - 8083:8083
     restart: unless-stopped
+    labels:
+      glance.name: Calibre-Web
+      glance.icon: sh:calibre-web
+      glance.url: https://ebooks.w8k.site
+      glance.description: E-books
 networks: {}

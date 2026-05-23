@@ -1,0 +1,23 @@
+- type: custom-api
+  title: Paperless
+  title-url: ${PAPERLESS_URL}
+  url: ${PAPERLESS_URL}/api/statistics/
+  headers:
+    Authorization: Token ${PAPERLESS_TOKEN}
+    Accept: application/json
+  cache: 5m
+  template: |
+    <div class="flex justify-between text-center">
+        <div>
+            <div class="color-highlight size-h3">{{ .JSON.Int "documents_total" | formatNumber }}</div>
+            <div class="size-h5 uppercase">Documents</div>
+        </div>
+        <div>
+            <div class="color-highlight size-h3">{{ .JSON.Int "documents_inbox" | formatNumber }}</div>
+            <div class="size-h5 uppercase">Inbox</div>
+        </div>
+        <div>
+            <div class="color-highlight size-h3">{{ .JSON.Int "character_count" | formatNumber }}</div>
+            <div class="size-h5 uppercase">Characters</div>
+        </div>
+    </div>

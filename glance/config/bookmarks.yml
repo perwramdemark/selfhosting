@@ -1,0 +1,42 @@
+- name: Bookmarks
+  columns:
+    - size: full
+      widgets:
+        - type: custom-api
+          title: RAINDROP LATEST LINKS
+          cache: 1h
+          url: https://api.raindrop.io/rest/v1/raindrops/0
+          headers:
+            Authorization: Bearer ${RAINDROP_API_KEY}
+          template: |
+            {{ if .JSON.Bool "result" }}
+              <ul class="list list-gap-10 collapsible-container" data-collapse-after="10">
+                {{ range .JSON.Array "items" }}
+                  <li class="list-item">
+                    <div class="flex items-center gap-10 list-with-seperator">
+                      <a href="{{ .String "link" }}" target="_blank" class="size-h3 color-primary-if-not-visited text-truncate-2">{{ .String "title" }}</a>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                      <ul class="list-horizontal-text">
+                        <li class="color-subdue">
+                          {{ $created := .String "created" }} 
+                          <span
+                            title="{{ $created }}"
+                            {{ parseRelativeTime "rfc3339" $created }} />
+                        </li>
+                        <li>{{ .String "domain" }}</li>
+                        {{ if .Array "tags" }}
+                          <li class="color-highlight">#{{ (index (.Array "tags") 0).String "" | trimPrefix "{" | trimSuffix "}" }}</li>
+                        {{ else }}
+                          <li class="color-subdue">untagged</li>
+                        {{ end }}
+                      </ul>
+                    </div>
+                  </li>
+                {{ end }}
+              </ul>
+            {{ else }}
+              <div class="color-negative padding-10">
+                No bookmarks found. Please check your authentication.
+              </div>
+            {{ end }}

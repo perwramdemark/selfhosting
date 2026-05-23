@@ -8,7 +8,7 @@ services:
       - /home/houdini/transmission:/config
     environment:
       - OPENVPN_PROVIDER=PIA
-      - OPENVPN_CONFIG=sweden
+      - OPENVPN_CONFIG=se_stockholm
       - OPENVPN_USERNAME=${OPENVPN_USERNAME}
       - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - TRANSMISSION_RPC_PASSWORD=${TRANSMISSION_PASSWORD}
@@ -25,4 +25,9 @@ services:
     ports:
       - 9091:9091
     image: haugene/transmission-openvpn
+    labels:
+      glance.name: Transmission
+      glance.icon: sh:transmission
+      glance.url: https://transmission.w8k.site
+      glance.description: Torrent
 networks: {}

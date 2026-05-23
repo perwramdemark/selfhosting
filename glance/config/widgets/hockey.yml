@@ -1,0 +1,42 @@
+- type: custom-api
+  title: SHL - Hv71 🏒
+  cache: 30m
+  template: |
+    {{/* 1. Grab the dynamic offset from the system (e.g., +02:00) */}}
+    {{ $tz := now.Format "-07:00" }}
+    
+    <div>
+      <div class="color-highlight">LAST GAME</div>
+      <div class="color-primary">
+        {{ .JSON.String "last_game.home_team" }} {{ .JSON.Int "last_game.home_score" }} - {{ .JSON.Int "last_game.away_score" }} {{ .JSON.String "last_game.away_team" }}
+        {{ if eq (.JSON.String "last_game.team_result") "win" }}✅{{ else }}❌{{ end }}
+      </div>
+      {{/* Build the timestamp using the dynamic $tz variable */}}
+      {{ $lastFull := printf "%sT%s:00%s" (.JSON.String "last_game.date") (.JSON.String "last_game.time") $tz }}
+      <div class="text-h5">
+        {{ (.JSON.String "last_game.date") }} {{ (.JSON.String "last_game.time") }}
+        <span
+          title="{{ $lastFull }}"
+          {{ parseRelativeTime "rfc3339" $lastFull }} />
+      </div>
+
+      <div class="color-highlight margin-top-5">NEXT GAME</div>
+      {{ if .JSON.String "next_game.date" }}
+      <div class="color-primary">
+        {{ .JSON.String "next_game.home_team" }} vs {{ .JSON.String "next_game.away_team" }}
+      </div>
+      {{/* Build the timestamp using the dynamic $tz variable */}}
+      {{ $nextFull := printf "%sT%s:00%s" (.JSON.String "next_game.date") (.JSON.String "next_game.time") $tz }}
+      <div class="text-h5">
+        {{ (.JSON.String "next_game.date") }} {{ (.JSON.String "next_game.time") }}
+        <span
+          title="{{ $nextFull }}"
+          {{ parseRelativeTime "rfc3339" $nextFull }} />
+      </div>
+      {{ else }}
+      No upcoming games scheduled.
+      {{ end }}
+          
+    </div>
+
+  url: https://hockey-api.w8k.site/team

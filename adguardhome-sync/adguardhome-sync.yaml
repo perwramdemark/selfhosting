@@ -1,0 +1,54 @@
+# cron expression to run in daemon mode. (default; "" = runs only once)
+cron: "0 */2 * * *"
+
+# runs the synchronisation on startup
+runOnStart: true
+
+# If enabled, the synchronisation task will not fail on single errors, but will log the errors and continue
+continueOnError: false
+
+origin:
+  url: http://192.168.1.10:83
+
+# replicas instances
+replicas:
+  - url: https://adguard-dumbledore.w8k.site
+  - url: https://adguard-labero.w8k.site
+
+api:
+  # Port, default 8080
+  port: 8080
+  # if username and password are defined, basic auth is applied to the sync API
+  # enable api dark mode
+  darkMode: true
+
+  # enable metrics on path '/metrics' (api port must be != 0)
+  # metrics:
+  #   enabled: true
+  #   scrapeInterval: 30s 
+  #   queryLogLimit: 10000
+
+  # enable tls for the api server
+  # tls:
+  #   # the directory of the provided tls certs
+  #   certDir: /path/to/certs
+  #   # the name of the cert file (default: tls.crt)
+  #   certName: foo.crt
+  #   # the name of the key file (default: tls.key)
+  #   keyName: bar.key
+
+# Configure sync features; by default all features are enabled.
+features:
+  generalSettings: true
+  queryLogConfig: true
+  statsConfig: true
+  clientSettings: true
+  services: true
+  filters: true
+  dhcp:
+    serverConfig: false
+    staticLeases: false
+  dns:
+    serverConfig: true
+    accessLists: true
+    rewrites: true

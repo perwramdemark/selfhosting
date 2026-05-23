@@ -1,0 +1,28 @@
+services:
+  adguardhome-sync:
+    image: lscr.io/linuxserver/adguardhome-sync:latest
+    container_name: adguardhome-sync
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - CONFIGFILE=/config/adguardhome-sync.yaml
+      - ORIGIN_USERNAME=${ORIGIN_USERNAME}
+      - ORIGIN_PASSWORD=${ORIGIN_PASSWORD}
+      - REPLICA1_USERNAME=${REPLICA1_USERNAME}
+      - REPLICA1_PASSWORD=${REPLICA1_PASSWORD}
+      - REPLICA2_USERNAME=${REPLICA2_USERNAME}
+      - REPLICA2_PASSWORD=${REPLICA2_PASSWORD}
+      - API_USERNAME=${API_USERNAME}
+      - API_PASSWORD=${API_PASSWORD}
+    volumes:
+      - /home/houdini/adguardhome-sync:/config
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    labels:
+      glance.name: AdGuard Home sync
+      glance.icon: sh:adguardhome-sync
+      glance.url: https://adguardhome-sync.w8k.site
+      glance.description: DNS Synchronization
+networks: {}

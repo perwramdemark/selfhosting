@@ -26,4 +26,9 @@ services:
       retries: 3
       start_period: 40s
     restart: unless-stopped
+    labels:
+      glance.name: ntfy
+      glance.icon: sh:ntfy
+      glance.url: https://ntfy.w8k.site
+      glance.description: Notifications
 networks: {}

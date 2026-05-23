@@ -1,5 +1,6 @@
 base-url: "https://ntfy.w8k.site"
 listen-http: ":80"
 cache-file: "/var/cache/ntfy/cache.db"
+cache-duration: "36h"
 behind-proxy: true
 upstream-base-url: "https://ntfy.sh"

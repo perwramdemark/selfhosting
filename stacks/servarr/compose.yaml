@@ -12,6 +12,11 @@ services:
     ports:
       - 7878:7878
     restart: unless-stopped
+    labels:
+      glance.name: Radarr
+      glance.icon: sh:radarr
+      glance.url: https://radarr.w8k.site
+      glance.description: Movies
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
@@ -24,6 +29,11 @@ services:
     ports:
       - 9696:9696
     restart: unless-stopped
+    labels:
+      glance.name: Prowlarr
+      glance.icon: sh:prowlarr
+      glance.url: https://prowlarr.w8k.site
+      glance.description: Indexer
   sonarr:
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
@@ -37,6 +47,29 @@ services:
       - /mnt/data/media:/media
     ports:
       - 8989:8989
+    labels:
+      glance.name: Sonarr
+      glance.icon: sh:sonarr
+      glance.url: https://sonarr.w8k.site
+      glance.description: TV Series
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/houdini/lidarr/config:/config
+      - /mnt/data/media:/media
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+    labels:
+      glance.name: Lidarr
+      glance.icon: sh:lidarr
+      glance.url: https://lidarr.w8k.site
+      glance.description: Music
   bazarr:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
@@ -50,6 +83,11 @@ services:
     ports:
       - 6767:6767
     restart: unless-stopped
+    labels:
+      glance.name: Bazarr
+      glance.icon: sh:bazarr
+      glance.url: https://bazarr.w8k.site
+      glance.description: Subtitles
   jellyseerr:
     image: fallenbagel/jellyseerr:latest
     container_name: jellyseerr
@@ -62,17 +100,9 @@ services:
     volumes:
       - /home/houdini/jellyseerr:/app/config
     restart: unless-stopped
-  readarr:
-    image: lscr.io/linuxserver/readarr:develop
-    container_name: readarr
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    volumes:
-      - /home/houdini/readarr:/config
-      - /mnt/data/media:/media
-    ports:
-      - 8787:8787
-    restart: unless-stopped
+    labels:
+      glance.name: Jellyseerr
+      glance.icon: sh:jellyseerr
+      glance.url: https://jellyseerr.w8k.site
+      glance.description: Request Management
 networks: {}

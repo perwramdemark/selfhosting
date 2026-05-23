@@ -1,0 +1,177 @@
+- name: Home
+  columns:
+    - size: small
+      widgets:
+
+        - type: search
+          search-engine: duckduckgo
+          new-tab: true
+          autofocus: true
+          bangs:
+            - title: YouTube
+              shortcut: "!yt"
+              url: https://www.youtube.com/results?search_query={QUERY}
+            - title: Prisjakt
+              shortcut: "!pj"
+              url: https://www.prisjakt.nu/search?query={QUERY}
+            - title: TMDB
+              shortcut: "!tmdb"
+              url: https://www.themoviedb.org/search?query={QUERY}
+
+        - type: weather
+          location: Karlskrona, Sweden
+          units: metric
+          hour-format: 24h
+
+        - type: calendar-legacy
+          start-sunday: false
+
+        - $include: widgets/beszel.yml
+
+        - $include: widgets/unifi.yml
+
+    - size: full
+      widgets:
+        - type: docker-containers
+          title: HOUDINI DOCKER CONTAINERS
+          hide-by-default: false
+
+        - type: docker-containers
+          title: COPPERFIELD DOCKER CONTAINERS
+          sock-path: tcp://192.168.1.11:2375
+
+        - type: group
+          widgets:
+            - type: hacker-news
+            - type: lobsters
+            - type: reddit
+              subreddit: technology
+              show-thumbnails: true
+            - type: reddit
+              subreddit: selfhosted
+              show-thumbnails: true
+            - type: rss
+              limit: 10
+              collapse-after: 3
+              cache: 2h
+              feeds:
+                - url: https://freshrss.w8k.site/api/query.php?user=perw8k&t=4yOmrd5bUrMlWsmPO77wl6&f=rss
+
+        - type: videos
+          channels:
+            - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
+            - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
+            - UCsBjURrPoezykLs9EqgamOA # Fireship
+            - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
+            - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
+
+    - size: small
+      widgets:
+
+        - $include: widgets/hockey.yml
+
+        - $include: widgets/football.yml
+
+        - type: markets
+          markets:
+            - symbol: ^OMX
+              name: OMX Stockholm 30
+
+        - type: custom-api
+          title: "Jellyfin"
+          base-url: "${JELLYFIN_URL}"
+          options:
+            url: "${JELLYFIN_URL}"
+            key: "${JELLYFIN_API_KEY}"
+          template: |
+            {{ $url := .Options.StringOr "url" "" }}
+            {{ $key := .Options.StringOr "key" "" }}
+            
+            {{- if or (eq $url "") (eq $key "") -}}
+              <p>Error: The URL or API Key was not configured in the widget options.</p>
+            {{- else -}}
+            
+              {{- $requestUrl := printf "%s/emby/Items/Counts?api_key=%s" $url $key -}}
+              {{- $jellyfinData := newRequest $requestUrl | getResponse -}}
+            
+              {{- if eq $jellyfinData.Response.StatusCode 200 -}}
+                <div class="flex flex-column gap-5">
+                  <div class="flex justify-between text-center">
+            
+                    <div>
+                      <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "MovieCount" | formatNumber }}</div>
+                      <div class="size-h5 uppercase">Movies</div>
+                    </div>
+            
+                    <div>
+                      <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "SeriesCount" | formatNumber }}</div>
+                      <div class="size-h5 uppercase">TV Shows</div>
+                    </div>
+            
+                    <div>
+                      <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "EpisodeCount" | formatNumber }}</div>
+                      <div class="size-h5 uppercase">Episodes</div>
+                    </div>
+            
+                    <div>
+                      <div class="color-highlight size-h3">{{ $jellyfinData.JSON.Int "SongCount" | formatNumber }}</div>
+                      <div class="size-h5 uppercase">Songs</div>
+                    </div>
+            
+                  </div>
+                </div>
+              {{- else -}}
+                <p>Failed: {{ $jellyfinData.Response.Status }}</p>
+              {{- end -}}
+            {{- end -}}
+
+        - type: custom-api
+          title: Calibre
+          cache: 1d
+          url: ${CALIBREWEB_URL}/opds/stats
+          headers:
+            Authorization: Basic ${CALIBREWEB_CREDS_B64}
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "books" | formatNumber }}</div>
+                <div class="size-h5 uppercase">Books</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "authors" | formatNumber }}</div>
+                <div class="size-h5 uppercase">Authors</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "series" | formatNumber }}</div>
+                <div class="size-h5 uppercase">Series</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "categories" | formatNumber }}</div>
+                <div class="size-h5 uppercase">Categories</div>
+              </div>
+            </div>
+
+        - $include: widgets/paperless.yml
+
+        - type: custom-api
+          title: Immich
+          cache: 1d
+          url: ${IMMICH_URL}/api/server/statistics
+          headers:
+            x-api-key: ${IMMICH_API_KEY}
+            Accept: application/json
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                <div class="size-h5">PHOTOS</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                <div class="size-h5">VIDEOS</div>
+              </div>
+              <div>
+                <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }} GB</div>
+                <div class="size-h5">USAGE</div>
+              </div>
+            </div>

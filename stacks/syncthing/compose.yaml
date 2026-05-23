@@ -1,0 +1,24 @@
+services:
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - /home/houdini/syncthing:/config
+      - /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/syncthing:/data1
+      - /srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/ebooks:/data2
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+    labels:
+      glance.name: Syncthing
+      glance.icon: sh:syncthing
+      glance.url: https://syncthing.w8k.site
+      glance.description: Distributed synchronization
+networks: {}

@@ -1,6 +1,6 @@
 services:
   tinyauth:
-    image: ghcr.io/steveiliop56/tinyauth:v3
+    image: ghcr.io/steveiliop56/tinyauth:v4
     container_name: tinyauth
     restart: unless-stopped
     ports:
@@ -8,12 +8,20 @@ services:
     environment:
       - SECRET=${SECRET}
       - APP_URL=https://tinyauth.w8k.site
-      - GENERIC_CLIENT_ID=bc74ab19-3941-45b3-b370-d1ae40dec47f
-      - GENERIC_CLIENT_SECRET=${CLIENT_SECRET}
-      - GENERIC_AUTH_URL=https://pocket-id.w8k.site/authorize
-      - GENERIC_TOKEN_URL=https://pocket-id.w8k.site/api/oidc/token
-      - GENERIC_USER_URL=https://pocket-id.w8k.site/api/oidc/userinfo
-      - GENERIC_SCOPES=openid email profile groups
-      - GENERIC_NAME=Pocket ID
-      - OAUTH_AUTO_REDIRECT=generic
+      - PROVIDERS_POCKETID_CLIENT_ID=bc74ab19-3941-45b3-b370-d1ae40dec47f
+      - PROVIDERS_POCKETID_CLIENT_SECRET=${CLIENT_SECRET}
+      - PROVIDERS_POCKETID_AUTH_URL=https://pocket-id.w8k.site/authorize
+      - PROVIDERS_POCKETID_TOKEN_URL=https://pocket-id.w8k.site/api/oidc/token
+      - PROVIDERS_POCKETID_USER_INFO_URL=https://pocket-id.w8k.site/api/oidc/userinfo
+      - PROVIDERS_POCKETID_REDIRECT_URL=https://tinyauth.w8k.site/api/oauth/callback/pocketid
+      - PROVIDERS_POCKETID_SCOPES=openid email profile groups
+      - PROVIDERS_POCKETID_NAME=Pocket ID
+      - OAUTH_AUTO_REDIRECT=pocketid
+    volumes:
+      - /home/houdini/tinyauth:/data
+    labels:
+      glance.name: Tinyauth
+      glance.icon: sh:tinyfeed
+      glance.url: https://tinyauth.w8k.site
+      glance.description: SSO
 networks: {}

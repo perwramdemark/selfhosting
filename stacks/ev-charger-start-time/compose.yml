@@ -1,0 +1,13 @@
+services:
+  ev-server:
+    image: ev-server
+    container_name: ev-server
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro    
+    ports:
+      - 8042:8000
+    environment:
+      - HA_TOKEN=${HA_TOKEN}
+      - TZ=${TZ}
+networks: {}

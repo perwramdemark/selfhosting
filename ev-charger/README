@@ -1,0 +1,7 @@
+Here is documentation of how to write a GlanceApp snippet https://github.com/glanceapp/glance/blob/main/docs/extensions.md.
+
+This is how you build the docker image
+
+docker build -t ev-server .
+docker stop ev-server
+docker rm ev-server

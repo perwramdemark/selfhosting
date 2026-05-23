@@ -1,7 +1,7 @@
 services:
   pocket-id:
     container_name: pocket-id
-    image: ghcr.io/pocket-id/pocket-id
+    image: ghcr.io/pocket-id/pocket-id:v2
     restart: unless-stopped
     env_file: .env
     ports:
@@ -15,4 +15,9 @@ services:
       timeout: 5s
       retries: 2
       start_period: 10s
+    labels:
+      glance.name: Pocket ID
+      glance.icon: sh:pocket-id
+      glance.url: https://pocket-id.w8k.site
+      glance.description: SSO passkeys
 networks: {}

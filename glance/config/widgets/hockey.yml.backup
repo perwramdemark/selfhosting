@@ -1,0 +1,17 @@
+- type: custom-api
+  title: SHL - Hv71 🏒
+  cache: 30m
+  url: https://hockey-api.w8k.site/team
+  template: |
+    <div>
+    <div class="color-highlight">LAST GAME</div>
+    {{ .JSON.String "last_game.home_team" }} {{ .JSON.Int "last_game.home_score" }} - {{ .JSON.Int "last_game.away_score" }} {{ .JSON.String "last_game.away_team" }}
+    {{ if eq (.JSON.String "last_game.team_result") "win" }}✅{{ else }}❌{{ end }}
+    <div class="color-highlight margin-top-5">NEXT GAME</div>
+    {{ if .JSON.String "next_game.date" }}
+    {{ .JSON.String "next_game.home_team" }} vs {{ .JSON.String "next_game.away_team" }}
+    {{ .JSON.String "next_game.date" }} @ {{ .JSON.String "next_game.time" }}
+    {{ else }}
+      No upcoming games scheduled.
+    {{ end }}
+    </div>

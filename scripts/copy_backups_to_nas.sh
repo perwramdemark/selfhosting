@@ -12,8 +12,8 @@ SOURCE_DIRS=(
   "/home/houdini/radarr/Backups"
   "/home/houdini/sonarr/Backups"
   "/home/houdini/prowlarr/Backups"
-  "/home/houdini/readarr/Backups"
   "/home/houdini/paperless/export"
+  "/srv/dev-disk-by-uuid-0690e9fe-6a27-4996-832c-be833cab6446/immich/backups"
 )
 
 # Base destination directory

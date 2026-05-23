@@ -3,9 +3,14 @@ networks:
     driver: bridge
 services:
   adguardhome:
+    extends:
+      file: ../common-security.yml
+      service: hardened-blueprint
     container_name: adguard_houdini
     image: adguard/adguardhome
     restart: unless-stopped
+    cap_add:
+      - NET_BIND_SERVICE
     volumes:
       - /home/houdini/adguard/work:/opt/adguardhome/work
       - /home/houdini/adguard/conf:/opt/adguardhome/conf
@@ -13,5 +18,17 @@ services:
       - 53:53/tcp
       - 53:53/udp
       - 83:80/tcp
+    healthcheck:
+      test:
+        - CMD
+        - nslookup
+        - localhost
+        - 127.0.0.1
+      interval: 30s
+      timeout: 10s
+      retries: 3
     labels:
-      - diun.enable=true
+      glance.name: AdGuard Home
+      glance.icon: sh:adguard-home
+      glance.url: https://adguard.w8k.site
+      glance.description: DNS

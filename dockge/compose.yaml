@@ -14,3 +14,8 @@ services:
     environment:
       # Tell Dockge where is your stacks directory
       - DOCKGE_STACKS_DIR=/opt/stacks
+    labels:
+      glance.name: Dockge
+      glance.icon: sh:dockge
+      glance.url: https://dockge.w8k.site
+      glance.description: Docker Management

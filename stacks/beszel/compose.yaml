@@ -8,11 +8,32 @@ services:
     volumes:
       - /home/houdini/beszel/beszel_data:/beszel_data
       - /home/houdini/beszel/beszel_socket:/beszel_socket
+    healthcheck:
+      test:
+        - CMD
+        - /beszel
+        - health
+        - --url
+        - http://localhost:8090
+      start_period: 5s
+      interval: 120s
+    labels:
+      glance.name: Beszel
+      glance.icon: sh:beszel
+      glance.url: https://beszel.w8k.site
+      glance.description: Monitoring
+      glance.id: beszel
   beszel-agent:
     image: henrygd/beszel-agent:latest
     container_name: beszel-agent
     restart: unless-stopped
     network_mode: host
+    healthcheck:
+      test:
+        - CMD
+        - /agent
+        - health
+      interval: 120s
     volumes:
       - /home/houdini/beszel/beszel_socket:/beszel_socket
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -23,4 +44,6 @@ services:
       USER_CREATION: true
       SHARE_ALL_SYSTEMS: true
       KEY: ${KEY}
+    labels:
+      glance.parent: beszel
 networks: {}

@@ -1,0 +1,247 @@
+- type: custom-api
+  title: Soccer - Arsenal ⚽️
+  cache: 30m
+
+  url: https://api.football-data.org/v4/teams/57/matches?status=SCHEDULED,IN_PLAY,FINISHED
+
+  headers:
+    X-Auth-Token: ${FOOTBALL_API_KEY}
+
+  template: |
+    <div class="football-fixtures">
+    
+      {{ $jsonData := .JSON }}
+      {{ $matches := $jsonData.Array "matches" }}
+      {{ $matchCount := len $matches }}
+    
+      {{/* --- Last Game --- */}}
+      <div style="margin-bottom: 12px;">
+        <div class="color-highlight">LAST GAME</div>
+        {{ $lastFound := false }}
+        {{ $lastHomeTeam := "N/A" }}
+        {{ $lastAwayTeam := "N/A" }}
+        {{ $lastHomeScore := "?" }}
+        {{ $lastAwayScore := "?" }}
+        {{ $lastDate := "N/A" }}
+    
+        {{ range $matches }}
+          {{ $matchData := .Value }} {{/* Get underlying map/object */}}
+          {{ $status := index $matchData "status" }}
+          {{ if and $status (eq ($status | printf "%s") "FINISHED") }}
+            {{ $lastFound = true }}
+    
+            {{ $homeTeamObj := index $matchData "homeTeam" }}
+            {{ $awayTeamObj := index $matchData "awayTeam" }}
+            {{ if $homeTeamObj }}{{ $lastHomeTeam = index $homeTeamObj "name" | printf "%s" }}{{ else }}{{ $lastHomeTeam = "N/A" }}{{ end }}
+            {{ if $awayTeamObj }}{{ $lastAwayTeam = index $awayTeamObj "name" | printf "%s" }}{{ else }}{{ $lastAwayTeam = "N/A" }}{{ end }}
+    
+            {{ $lastHomeScore = "?" }} {{/* Default */}}
+            {{ $lastAwayScore = "?" }} {{/* Default */}}
+            {{ $scoreObj := index $matchData "score" }}
+            {{ if $scoreObj }}
+              {{ $fullTimeObj := index $scoreObj "fullTime" }}
+              {{ if $fullTimeObj }}
+                {{ $homeScoreVal := index $fullTimeObj "home" }}
+                {{ $awayScoreVal := index $fullTimeObj "away" }}
+                {{/* Check if score value is not nil before formatting */}}
+                {{ if ne $homeScoreVal nil }} {{/* Check for not nil */}}
+                    {{ $lastHomeScore = $homeScoreVal | printf "%.0f" }}
+                {{ else }}
+                    {{ $lastHomeScore = "?" }}
+                {{ end }}
+                {{ if ne $awayScoreVal nil }} {{/* Check for not nil */}}
+                    {{ $lastAwayScore = $awayScoreVal | printf "%.0f" }}
+                {{ else }}
+                    {{ $lastAwayScore = "?" }}
+                {{ end }}
+              {{ end }}
+            {{ end }}
+    
+            {{ $dateVal := index $matchData "utcDate" }}
+            {{ if $dateVal }}{{ $lastDate = $dateVal | printf "%s" }}{{ else }}{{ $lastDate = "N/A" }}{{ end }}
+          {{ end }}
+        {{ end }}
+    
+        {{/* --- Display Last Game --- */}}
+        {{ if $lastFound }}
+          <div class="color-primary">
+            {{ $lastHomeTeam }} {{ $lastHomeScore }} - {{ $lastAwayScore }} {{ $lastAwayTeam }}
+          </div>
+          {{ $dateStr := $lastDate }}
+          {{ if and $dateStr (ne $dateStr "N/A") (ge (len $dateStr) 16) }}
+            {{ $year := slice $dateStr 0 4 }}
+            {{ $month := slice $dateStr 5 7 }}
+            {{ $day := slice $dateStr 8 10 }}
+            {{ $hour := slice $dateStr 11 13 }}
+            {{ $minute := slice $dateStr 14 16 }}
+            {{ $timedhour := slice $dateStr 11 13 }}
+            {{/*Adjust the time to the one that reflects yours timezone. Delete/Add if you need*/}}
+            {{ if eq $hour "11" }}{{ $timedhour = "13" }}{{ end }} {{/* Eg. a match in my timezone start at 12. But in UTC time is 11. Ik is very rudimental but I can't find other solution */}}
+            {{ if eq $hour "14" }}{{ $timedhour = "16" }}{{ end }}
+            {{ if eq $hour "15" }}{{ $timedhour = "17" }}{{ end }}
+            {{ if eq $hour "16" }}{{ $timedhour = "18" }}{{ end }}
+            {{ if eq $hour "17" }}{{ $timedhour = "19" }}{{ end }}
+            {{ if eq $hour "19" }}{{ $timedhour = "21" }}{{ end }}
+            {{ if eq $hour "20" }}{{ $timedhour = "22" }}{{ end }}
+            <div style="size-h5">
+              {{ $year }}-{{ $month }}-{{ $day }} {{ $timedhour }}:{{ $minute }}
+            </div>
+          {{ else if $dateStr }}
+            {{/* Fallback if date string is not in expected format */}}
+            <div class="color-subdue" style="font-size: 13px">{{ $dateStr }}</div>
+          {{ end }}
+        {{ else }}
+          <div class="color-subdue" style="font-size: 1.1em;">No finished games found</div>
+        {{ end }}
+      </div>
+    
+      {{/* --- Live Game --- */}}
+        {{ $liveFound := false }}
+        {{ $liveHomeTeam := "N/A" }}
+        {{ $liveAwayTeam := "N/A" }}
+        {{ $liveHomeScore := "?" }}
+        {{ $liveAwayScore := "?" }}
+        {{ $liveDate := "N/A" }}
+    
+        {{ range $matches }}
+          {{ $matchData := .Value }} {{/* Get underlying map/object */}}
+          {{ $status := index $matchData "status" }}
+          {{ if and $status (eq ($status | printf "%s") "IN_PLAY") }}
+            {{ $liveFound = true }}
+            {{ $homeTeamObj := index $matchData "homeTeam" }}
+            {{ $awayTeamObj := index $matchData "awayTeam" }}
+            {{ if $homeTeamObj }}{{ $liveHomeTeam = index $homeTeamObj "name" | printf "%s" }}{{ else }}{{ $liveHomeTeam = "N/A" }}{{ end }}
+            {{ if $awayTeamObj }}{{ $liveAwayTeam = index $awayTeamObj "name" | printf "%s" }}{{ else }}{{ $liveAwayTeam = "N/A" }}{{ end }}
+            {{ $liveHomeScore = "?" }} {{/* Default */}}
+            {{ $liveAwayScore = "?" }} {{/* Default */}}
+            {{ $scoreObj := index $matchData "score" }}
+            {{ if $scoreObj }}
+              {{ $fullTimeObj := index $scoreObj "fullTime" }}
+              {{ if $fullTimeObj }}
+                {{ $homeScoreVal := index $fullTimeObj "home" }}
+                {{ $awayScoreVal := index $fullTimeObj "away" }}
+                {{/* Check if score value is not nil before formatting */}}
+                {{ if ne $homeScoreVal nil }} {{/* Check for not nil */}}
+                    {{ $liveHomeScore = $homeScoreVal | printf "%.0f" }}
+                {{ else }}
+                    {{ $liveHomeScore = "?" }}
+                {{ end }}
+                {{ if ne $awayScoreVal nil }} {{/* Check for not nil */}}
+                    {{ $liveAwayScore = $awayScoreVal | printf "%.0f" }}
+                {{ else }}
+                    {{ $liveAwayScore = "?" }}
+                {{ end }}
+              {{ end }}
+            {{ end }}
+    
+            {{ $dateVal := index $matchData "utcDate" }}
+            {{ if $dateVal }}{{ $liveDate = $dateVal | printf "%s" }}{{ else }}{{ $liveDate = "N/A" }}{{ end }}
+          {{ end }}
+        {{ end }}
+    
+        {{/* --- Display Live Match --- */}}
+        {{ if $liveFound }}
+          <div style="margin-bottom: 12px;">
+          <div class="color-highlight">LIVE GAME</div>
+          <div class="color-primary">
+            {{ $liveHomeTeam }} {{ $liveHomeScore }} - {{ $liveAwayScore }} {{ $liveAwayTeam }}
+          </div>
+          {{ $dateStr := $liveDate }}
+          {{ if and $dateStr (ne $dateStr "N/A") (ge (len $dateStr) 16) }}
+            {{ $year := slice $dateStr 0 4 }}
+            {{ $month := slice $dateStr 5 7 }}
+            {{ $day := slice $dateStr 8 10 }}
+            {{ $hour := slice $dateStr 11 13 }}
+            {{ $minute := slice $dateStr 14 16 }}
+            {{ $timedhour := slice $dateStr 11 13 }}
+            {{/*Adjust the time to the one that reflects yours timezone. Delete/Add if you need*/}}
+            {{ if eq $hour "11" }}{{ $timedhour = "13" }}{{ end }} {{/* Eg. a match in my timezone start at 12. But in UTC time is 11. Ik is very rudimental but i can't find other solution */}}
+            {{ if eq $hour "14" }}{{ $timedhour = "16" }}{{ end }}
+            {{ if eq $hour "15" }}{{ $timedhour = "17" }}{{ end }}
+            {{ if eq $hour "16" }}{{ $timedhour = "18" }}{{ end }}
+            {{ if eq $hour "17" }}{{ $timedhour = "19" }}{{ end }}
+            {{ if eq $hour "19" }}{{ $timedhour = "21" }}{{ end }}
+            {{ if eq $hour "20" }}{{ $timedhour = "22" }}{{ end }}
+            <div style="font-size: 13px;">
+              <p class="color-highlight">
+                <span>Live, started</span>
+                {{ $datetime := $dateStr}}
+                <span
+                  class="color-highlight"
+                  title="{{ $dateStr }}"
+                  {{ parseRelativeTime "rfc3339" $datetime }}
+                ></span><span class="color-highlight"> ago</span>
+              </p>
+            </div>
+          {{ else if $dateStr }}
+            {{/* Fallback if date string is not in expected format */}}
+            <div class="color-subdue" style="font-size: 13px">{{ $dateStr }}</div>
+          {{ end }}
+          </div>
+        {{ end }}
+    
+      {{/* --- Next game --- */}}
+      <div>
+        <div class="color-highlight">NEXT GAME</div>
+        {{ $nextFound := false }}
+        {{ $nextHomeTeam := "N/A" }}
+        {{ $nextAwayTeam := "N/A" }}
+        {{ $nextDate := "N/A" }}
+        {{ range $matches }}
+          {{ $matchData := .Value }}
+          {{ if not $nextFound }}
+            {{ $status := index $matchData "status" }}
+            {{ if $status }}
+              {{ $statusStr := $status | printf "%s" }}
+              {{/* The API might use TIMED or SCHEDULED for upcoming */}}
+              {{ if or (eq $statusStr "SCHEDULED") (eq $statusStr "TIMED") }}
+                {{ $nextFound = true }}
+                {{ $homeTeamObj := index $matchData "homeTeam" }}
+                {{ $awayTeamObj := index $matchData "awayTeam" }}
+                {{ if $homeTeamObj }}{{ $nextHomeTeam = index $homeTeamObj "name" | printf "%s" }}{{ else }}{{ $nextHomeTeam = "N/A" }}{{ end }}
+                {{ if $awayTeamObj }}{{ $nextAwayTeam = index $awayTeamObj "name" | printf "%s" }}{{ else }}{{ $nextAwayTeam = "N/A" }}{{ end }}
+                {{ $dateVal := index $matchData "utcDate" }}
+                {{ if $dateVal }}{{ $nextDate = $dateVal | printf "%s" }}{{ else }}{{ $nextDate = "N/A" }}{{ end }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+    
+        {{/* --- Display Next Match --- */}}
+        {{ if $nextFound }}
+          <div class="color-primary">
+            {{ $nextHomeTeam }} vs {{ $nextAwayTeam }}
+          </div>
+          {{ $dateStr := $nextDate }}
+          {{ if and $dateStr (ne $dateStr "N/A") (ge (len $dateStr) 16) }}
+            {{ $year := slice $dateStr 0 4 }}
+            {{ $month := slice $dateStr 5 7 }}
+            {{ $day := slice $dateStr 8 10 }}
+            {{ $hour := slice $dateStr 11 13 }}
+            {{ $minute := slice $dateStr 14 16 }}
+            {{ $timedhour := slice $dateStr 11 13 }}
+            {{/*Adjust the time to the one that reflects yours timezone. Delete/Add if you need*/}}
+            {{ if eq $hour "11" }}{{ $timedhour = "13" }}{{ end }} {{/* Eg. a match in my timezone start at 12. But in UTC time is 11. Ik is very rudimental but i can't find other solution */}}
+            {{ if eq $hour "14" }}{{ $timedhour = "16" }}{{ end }}
+            {{ if eq $hour "16" }}{{ $timedhour = "18" }}{{ end }}
+            {{ if eq $hour "17" }}{{ $timedhour = "19" }}{{ end }}
+            {{ if eq $hour "19" }}{{ $timedhour = "21" }}{{ end }}
+            {{ if eq $hour "20" }}{{ $timedhour = "22" }}{{ end }}
+            <div style="size-h5">
+              {{ $year }}-{{ $month }}-{{ $day }} {{ $timedhour }}:{{ $minute }}
+              <span>Live</span>
+              {{ $datetime := $dateStr}}
+              <span
+                title="{{ $dateStr }}"
+                {{ parseRelativeTime "rfc3339" $datetime }}
+              />
+            </div>
+          {{ else if $dateStr }}
+            {{/* Fallback if date string is not in expected format */}}
+            <div class="color-subdue">{{ $dateStr }}</div>
+          {{ end }}
+        {{ else }}
+          <div class="color-subdue">No upcoming games found</div>
+        {{ end }}
+      </div>
+    </div>

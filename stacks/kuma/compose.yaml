@@ -1,6 +1,6 @@
 services:
   uptime-kuma:
-    image: louislam/uptime-kuma:1
+    image: louislam/uptime-kuma:2
     container_name: kuma
     environment:
       - PUID=${PUID}
@@ -12,4 +12,9 @@ services:
     ports:
       - 3001:3001
     restart: unless-stopped
+    labels:
+      glance.name: Kuma
+      glance.icon: sh:uptime-kuma
+      glance.url: https://kuma.w8k.site
+      glance.description: Monitoring
 networks: {}

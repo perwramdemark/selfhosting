@@ -1,0 +1,19 @@
+services:
+  watchdog:
+    container_name: container-watchdog
+    image: watchdog:latest
+    extends:
+      file: ../common-security.yml
+      service: hardened-blueprint
+    group_add:
+      - "992"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Krävs för att kontrollera Docker
+    command:
+      - transmission-openvpn
+    restart: unless-stopped
+    labels:
+      glance.name: Watchdog
+      glance.icon: sh:javaScript
+      glance.description: Container Watchdog
+networks: {}

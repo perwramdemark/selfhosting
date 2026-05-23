@@ -11,4 +11,9 @@ services:
     ports:
       - 8120:80
     restart: unless-stopped
+    labels:
+      glance.name: Freshrss
+      glance.icon: sh:freshrss
+      glance.url: https://freshrss.w8k.site
+      glance.description: RSS aggregator
 networks: {}

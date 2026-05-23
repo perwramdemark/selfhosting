@@ -1,0 +1,11 @@
+services:
+  hardened-blueprint:
+    environment:
+      - TZ=Europe/Stockholm
+      - PUID=1002
+      - PGID=1002
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

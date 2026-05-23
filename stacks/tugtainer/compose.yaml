@@ -1,0 +1,16 @@
+services:
+  tugtainer:
+    container_name: tugtainer
+    restart: unless-stopped
+    image: quenary/tugtainer:latest
+    ports:
+      - 9412:80
+    volumes:
+      - /home/houdini/tugtainer:/tugtainer
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      glance.name: Tugtainer
+      glance.icon: sh:tugtainer
+      glance.url: https://tugtainer.w8k.site
+      glance.description: Docker Management
+networks: {}

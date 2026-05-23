@@ -1,0 +1,19 @@
+services:
+  glance:
+    container_name: glance
+    image: glanceapp/glance
+    restart: unless-stopped
+    volumes:
+      - /home/houdini/glance/config:/app/config
+      - /home/houdini/glance/assets:/app/assets
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 8085:8080
+    env_file: .env
+    labels:
+      glance.name: Glance
+      glance.icon: sh:glance
+      glance.url: https://glance.w8k.site
+      glance.description: Dashboard
+networks: {}
