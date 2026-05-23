@@ -120,6 +120,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 					// Om vi har data, skala om till 0-50 och bygg points-strängen
 					pointsStr := ""
 					highlightStr := ""
+					nowDotStr := ""
 					if len(combined) > 0 {
 						// hitta min och max
 						min := combined[0]
@@ -172,6 +173,28 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 								}
 							}
 						}
+						// Markera nuvarande tid (lokal/Stockholm) som en punkt
+						nowTime := time.Now()
+						todayMid := time.Date(nowTime.Year(), nowTime.Month(), nowTime.Day(), 0, 0, 0, 0, nowTime.Location())
+						hoursFloat := nowTime.Sub(todayMid).Hours()
+						if hoursFloat >= 0 && hoursFloat <= float64(len(combined)-1) {
+							floorIdx := int(hoursFloat)
+							frac := hoursFloat - float64(floorIdx)
+							ceilIdx := floorIdx + 1
+							if ceilIdx >= len(combined) {
+								ceilIdx = floorIdx
+							}
+							interpolated := combined[floorIdx] + (combined[ceilIdx]-combined[floorIdx])*frac
+							var scaledNow float64
+							if max == min {
+								scaledNow = 25.0
+							} else {
+								scaledNow = ((interpolated - min) / (max - min)) * 50.0
+							}
+							nowX := hoursFloat * step
+							nowY := 50.0 - scaledNow
+							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-highlight)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY)
+						}
 					}
 					// ersätt den hårdkodade polyline-points med vår genererade om vi lyckades
 					if pointsStr != "" {
@@ -187,6 +210,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 			  <svg class="market-chart" viewBox="0 0 100 50" width="100%%" height="100%%" preserveAspectRatio="none">
 				  <polyline fill="none" stroke="var(--color-text-subdue)" stroke-linejoin="round" stroke-width="1.0px" points="%s" vector-effect="non-scaling-stroke"></polyline>
 				  %s
+				  %s
 			  </svg>
 		  </a>
 		  <div class="market-values shrink-0">
@@ -195,7 +219,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 		  </div>
 	  </div>
   </div>
-	`, timeInfo.Day, timeInfo.Day, timeInfo.Time, pointsStr, highlightStr, fmt.Sprintf("%.2f kr", data.Attributes.AveragePrice))
+	`, timeInfo.Day, timeInfo.Day, timeInfo.Time, pointsStr, highlightStr, nowDotStr, fmt.Sprintf("%.2f kr", data.Attributes.AveragePrice))
 						w.Write([]byte(htmlContent))
 						return
 					}
