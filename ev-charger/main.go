@@ -195,7 +195,8 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							}
 							nowX := idxFloat * step
 							nowY := 50.0 - scaledNow
-							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-highlight)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY)
+							// Använd en mini-länge så att stroke-linecap="round" garanterat ritas (vissa webbläsare cullar nollängdslinjer)
+							nowDotStr = fmt.Sprintf(`<line x1="%.2f" y1="%.2f" x2="%.2f" y2="%.2f" stroke="var(--color-negative)" stroke-width="6" stroke-linecap="round" vector-effect="non-scaling-stroke"></line>`, nowX, nowY, nowX, nowY+0.1)
 						}
 					}
 					// ersätt den hårdkodade polyline-points med vår genererade om vi lyckades
