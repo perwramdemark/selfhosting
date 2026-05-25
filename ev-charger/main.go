@@ -165,7 +165,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 							todayMidnight := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 							startIdx := int(stateLocal.Sub(todayMidnight).Hours() * float64(pointsPerHour))
 							if startIdx >= 0 && startIdx < len(pts) {
-								endIdx := startIdx + 5*pointsPerHour
+								endIdx := startIdx + 4*pointsPerHour
 								if endIdx > len(pts)-1 {
 									endIdx = len(pts) - 1
 								}
