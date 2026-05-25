@@ -171,7 +171,7 @@ func snippetHandler(w http.ResponseWriter, r *http.Request) {
 								}
 								if endIdx > startIdx {
 									highlightPts := strings.Join(pts[startIdx:endIdx+1], " ")
-									highlightStr = fmt.Sprintf(`<polyline fill="none" stroke="var(--color-positive)" stroke-linejoin="round" stroke-width="1.5px" points="%s" vector-effect="non-scaling-stroke"></polyline>`, highlightPts)
+									highlightStr = fmt.Sprintf(`<polyline fill="none" stroke="var(--color-primary)" stroke-linejoin="round" stroke-width="1.5px" points="%s" vector-effect="non-scaling-stroke"></polyline>`, highlightPts)
 								}
 							}
 						}
