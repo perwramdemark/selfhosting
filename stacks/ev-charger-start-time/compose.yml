@@ -4,10 +4,15 @@ services:
     container_name: ev-server
     restart: unless-stopped
     volumes:
-      - /etc/localtime:/etc/localtime:ro    
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - 8042:8000
     environment:
       - HA_TOKEN=${HA_TOKEN}
       - TZ=${TZ}
+    labels:
+      glance.name: EV Charger Start Time
+      glance.icon: "mdi:home-lightning-bolt-outline"
+      glance.url: http://192.168.1.10:8042/ev-start-time-snippet
+      glance.description: Glance widget when to start charging
 networks: {}

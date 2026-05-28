@@ -1,26 +1,28 @@
 services:
-  tailscale-nginx:
+  tailscale:
     image: tailscale/tailscale:latest
-    hostname: tailscale-houdini
+    hostname: houdini-rpi
+    container_name: tailscale-houdini
     environment:
       - TS_AUTHKEY=${client_secret}
-      - TS_EXTRA_ARGS=--advertise-tags=tag:container --advertise-exit-node
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --accept-routes
       - TS_STATE_DIR=/var/lib/tailscale
       - TS_USERSPACE=false
       - TS_ROUTES=192.168.1.0/24
+      - TS_DEBUG_FIREWALL_MODE=nftables
     volumes:
       - /home/houdini/tailscale:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
+      - NET_RAW
     sysctls:
       net.ipv4.ip_forward: "1"
       net.ipv6.conf.all.forwarding: "1"
     restart: unless-stopped
     labels:
-      glance.name: Tailscale
+      glance.name: Tailscale Client
       glance.icon: sh:tailscale
-      glance.description: VPN
+      glance.description: VPN Mesh Client
 networks: {}
